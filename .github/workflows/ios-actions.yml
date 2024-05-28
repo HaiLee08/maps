@@ -1,44 +1,12 @@
 name: iOS Build & Detox
 
 on:
-  workflow_call:
-    inputs:
-      env_name:
-        required: true
-        default: default
-        type: string
-      ref:
-        required: false
-        type: string 
-      NVMRC:
-        required: true
-        type: string
-      MAP_IMPL:
-        description: "The map implementation to use (mapbox,mapbox11)"
-        default: mapbox
-        required: false
-        type: string
-      NEW_ARCH:
-        description: "If build with new architecture or not"
-        default: false
-        required: false
-        type: boolean
-    secrets:
-      MAPBOX_ACCESS_TOKEN:
-        required: true
-      MAPBOX_DOWNLOAD_TOKEN:
-        required: true
-      ENV_MAPBOX_ACCESS_TOKEN:
-        required: false
-      ENV_MAPBOX_DOWNLOAD_TOKEN:
-        required: false
+  workflow_dispatch:
 
 jobs:
   build:
-    name: iOS Example Build ${{ inputs.NEW_ARCH && 'Fabric' || 'Paper' }} ${{ inputs.MAP_IMPL }}
+    name: iOS Example Build
     runs-on: macos-13
-    timeout-minutes: 55
-    environment: ${{ inputs.env_name }}
 
     defaults:
       run:
@@ -70,10 +38,10 @@ jobs:
         env:
           MAPBOX_DOWNLOAD_TOKEN: ${{ secrets.MAPBOX_DOWNLOAD_TOKEN || secrets.ENV_MAPBOX_DOWNLOAD_TOKEN }}
 
-      - name: Setup node ${{ inputs.NVMRC }}
+      - name: Setup node 22
         uses: actions/setup-node@v3.5.1
         with:
-          node-version: ${{ inputs.NVMRC }}
+          node-version: 22
 
       - name: Cache node_modules
         uses: actions/cache@v3
